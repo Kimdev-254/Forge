@@ -1,101 +1,368 @@
-import Image from "next/image";
+"use client"
+
+import { useEffect, useRef } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  ArrowRight,
+  Target,
+  Brain,
+  Zap,
+  Activity,
+  Award,
+  Trophy,
+} from "lucide-react"
+import * as d3 from "d3"
+
+// Sample data for the chart
+const data = [
+  { day: "Mon", score: 85 },
+  { day: "Tue", score: 82 },
+  { day: "Wed", score: 89 },
+  { day: "Thu", score: 87 },
+  { day: "Fri", score: 92 },
+  { day: "Sat", score: 90 },
+  { day: "Sun", score: 95 },
+]
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const chartRef = useRef(null)
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    if (chartRef.current) {
+      drawChart()
+    }
+  }, [])
+
+  const drawChart = () => {
+    const width = 600
+    const height = 200
+    const margin = { top: 20, right: 30, bottom: 30, left: 40 }
+
+    const svg = d3
+      .select(chartRef.current)
+      .attr("width", width)
+      .attr("height", height)
+
+    const x = d3
+      .scaleBand()
+      .domain(data.map((d) => d.day))
+      .range([margin.left, width - margin.right])
+      .padding(0.1)
+
+    const y = d3
+      .scaleLinear()
+      .domain([0, d3.max(data, (d) => d.score)])
+      .nice()
+      .range([height - margin.bottom, margin.top])
+
+    const line = d3
+      .line()
+      .x((d) => x(d.day) + x.bandwidth() / 2)
+      .y((d) => y(d.score))
+      .curve(d3.curveMonotoneX)
+
+    svg
+      .append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "hsl(var(--primary))")
+      .attr("stroke-width", 2)
+      .attr("d", line)
+
+    svg
+      .selectAll(".dot")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("class", "dot")
+      .attr("cx", (d) => x(d.day) + x.bandwidth() / 2)
+      .attr("cy", (d) => y(d.score))
+      .attr("r", 4)
+      .attr("fill", "hsl(var(--primary))")
+
+    svg
+      .append("g")
+      .attr("transform", `translate(0,${height - margin.bottom})`)
+      .call(d3.axisBottom(x))
+      .attr("color", "hsl(var(--muted-foreground))")
+
+    svg
+      .append("g")
+      .attr("transform", `translate(${margin.left},0)`)
+      .call(d3.axisLeft(y))
+      .attr("color", "hsl(var(--muted-foreground))")
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-12">
+      {/* Dashboard Hero Section */}
+      <section className="mb-16">
+        <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center bg-gradient-to-r from-primary to-primary/60 text-transparent bg-clip-text">
+          Forge Your Discipline
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Link href="/dashboard" className="group">
+            <Card className="transition-all duration-300 hover:shadow-lg">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Consistency Score
+                </CardTitle>
+                <Activity className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-2xl font-bold">85%</div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      <span className="text-primary">↑ 12%</span> since day one
+                    </p>
+                  </div>
+                  <div className="relative h-16 w-16">
+                    <svg className="h-full w-full" viewBox="0 0 36 36">
+                      <circle
+                        cx="18"
+                        cy="18"
+                        r="16"
+                        fill="none"
+                        className="stroke-muted"
+                        strokeWidth="2"
+                      />
+                      <circle
+                        cx="18"
+                        cy="18"
+                        r="16"
+                        fill="none"
+                        className="stroke-primary"
+                        strokeWidth="2"
+                        strokeDasharray="100"
+                        strokeDashoffset="15"
+                        transform="rotate(-90 18 18)"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/dashboard" className="group">
+            <Card className="transition-all duration-300 hover:shadow-lg">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Active Streaks
+                </CardTitle>
+                <Award className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-2xl font-bold">21</div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      <span className="text-primary">↑ 5</span> new records
+                    </p>
+                  </div>
+                  <div className="relative h-16 w-16">
+                    <svg className="h-full w-full" viewBox="0 0 36 36">
+                      <circle
+                        cx="18"
+                        cy="18"
+                        r="16"
+                        fill="none"
+                        className="stroke-muted"
+                        strokeWidth="2"
+                      />
+                      <circle
+                        cx="18"
+                        cy="18"
+                        r="16"
+                        fill="none"
+                        className="stroke-primary"
+                        strokeWidth="2"
+                        strokeDasharray="100"
+                        strokeDashoffset="30"
+                        transform="rotate(-90 18 18)"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/dashboard" className="group">
+            <Card className="transition-all duration-300 hover:shadow-lg">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Goals Achieved
+                </CardTitle>
+                <Trophy className="h-4 w-4 text-primary" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-2xl font-bold">95%</div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      <span className="text-primary">↑ 15%</span> completion
+                    </p>
+                  </div>
+                  <div className="relative h-16 w-16">
+                    <svg className="h-full w-full" viewBox="0 0 36 36">
+                      <circle
+                        cx="18"
+                        cy="18"
+                        r="16"
+                        fill="none"
+                        className="stroke-muted"
+                        strokeWidth="2"
+                      />
+                      <circle
+                        cx="18"
+                        cy="18"
+                        r="16"
+                        fill="none"
+                        className="stroke-primary"
+                        strokeWidth="2"
+                        strokeDasharray="100"
+                        strokeDashoffset="5"
+                        transform="rotate(-90 18 18)"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Weekly Performance Trend Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Weekly Performance Trend</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[200px] w-full">
+              <svg ref={chartRef} className="w-full h-full"></svg>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Discipline DNA Section */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-center mb-8">
+          Your Discipline DNA
+        </h2>
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-semibold text-primary">
+                  Discipline Type: The Steady Climber
+                </h3>
+                <p className="text-muted-foreground">
+                  Your consistent efforts are paying off. Keep pushing your
+                  limits!
+                </p>
+              </div>
+              <Button asChild>
+                <Link href="/dna">View Full Profile</Link>
+              </Button>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-muted p-4 rounded-lg">
+                <h4 className="text-lg font-semibold mb-2">Focus</h4>
+                <div className="w-full bg-secondary rounded-full h-2.5">
+                  <div
+                    className="bg-primary h-2.5 rounded-full"
+                    style={{ width: "70%" }}
+                  ></div>
+                </div>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h4 className="text-lg font-semibold mb-2">Time Management</h4>
+                <div className="w-full bg-secondary rounded-full h-2.5">
+                  <div
+                    className="bg-primary h-2.5 rounded-full"
+                    style={{ width: "85%" }}
+                  ></div>
+                </div>
+              </div>
+              <div className="bg-muted p-4 rounded-lg">
+                <h4 className="text-lg font-semibold mb-2">Consistency</h4>
+                <div className="w-full bg-secondary rounded-full h-2.5">
+                  <div
+                    className="bg-primary h-2.5 rounded-full"
+                    style={{ width: "90%" }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Features Section */}
+      <section className="mb-16">
+        <h2 className="text-3xl font-bold text-center mb-8">
+          Why Choose Forge?
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <Card>
+            <CardHeader>
+              <Target className="w-10 h-10 text-primary mb-2" />
+              <CardTitle>Smart Goal Setting</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Set clear, achievable goals with our AI-powered recommendation
+                system.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Brain className="w-10 h-10 text-primary mb-2" />
+              <CardTitle>Habit Formation</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Develop lasting habits with our scientifically-backed tracking
+                system and personalized insights.
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Zap className="w-10 h-10 text-primary mb-2" />
+              <CardTitle>Dynamic DNA Profile</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Experience a unique, evolving discipline profile that adapts to
+                your progress and challenges.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="text-center bg-muted rounded-lg p-12">
+        <h2 className="text-3xl font-bold mb-4">
+          Ready to Forge Your Discipline?
+        </h2>
+        <p className="text-xl mb-8 text-muted-foreground">
+          Join thousands who have transformed their lives through consistent
+          habit-building.
+        </p>
+        <Button size="lg" asChild>
+          <Link href="/signup">
+            Start Your Journey <ArrowRight className="ml-2" />
+          </Link>
+        </Button>
+      </section>
     </div>
-  );
+  )
 }
