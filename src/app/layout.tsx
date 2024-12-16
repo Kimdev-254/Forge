@@ -1,33 +1,55 @@
-import "./globals.css"
-import { Inter } from "next/font/google"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
-import { ThemeProvider } from "./contexts/ThemeContext"
+import "@/styles/globals.css"
+import { Metadata } from "next"
 
-const inter = Inter({ subsets: ["latin"] })
+import { siteConfig } from "@/config/site"
+import { fontSans } from "@/lib/fonts"
+import { cn } from "@/lib/utils"
+import { SiteHeader } from "@/components/site-header"
+import { TailwindIndicator } from "@/components/tailwind-indicator"
+import { ThemeProvider } from "@/components/theme-provider"
+import { Sidebar } from "@/components/sidebar"
 
-export const metadata = {
-  title: "Forge - Build Your Discipline",
-  description:
-    "Forge your discipline with personalized insights and habit-building tools.",
+export const metadata: Metadata = {
+  title: {
+    default: siteConfig.name,
+    template: `%s - ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
+  },
 }
 
-export default function RootLayout({
-  children,
-}: {
+interface RootLayoutProps {
   children: React.ReactNode
-}) {
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.className} min-h-screen bg-background text-foreground`}
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
       >
-        <ThemeProvider>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow">{children}</main>
-            <Footer />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <div className="relative flex min-h-screen flex-col">
+            <SiteHeader />
+            <div className="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
+              <Sidebar />
+              <main className="flex w-full flex-col overflow-hidden">
+                {children}
+              </main>
+            </div>
           </div>
+          <TailwindIndicator />
         </ThemeProvider>
       </body>
     </html>
