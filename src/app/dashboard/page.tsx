@@ -1,5 +1,9 @@
-"use client"
-
+import { Metadata } from "next"
+import { AnimatedNumber } from "@/components/animated-number"
+import { PerformanceChart } from "@/components/performance-chart"
+import { GoalProgress } from "@/components/goal-progress"
+import { RecentActivity } from "@/components/recent-activity"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -7,61 +11,48 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Calendar, CheckCircle, Target, Clock } from "lucide-react"
+import { CalendarDays, Trophy, Zap } from "lucide-react"
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "View your progress and achievements.",
+}
 
 export default function DashboardPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-8">Your Dashboard</h1>
-
+    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+      <div className="flex items-center justify-between space-y-2">
+        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        <div className="flex items-center space-x-2">
+          <Button>Download Report</Button>
+        </div>
+      </div>
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="habits">Habits</TabsTrigger>
-          <TabsTrigger value="goals">Goals</TabsTrigger>
+          <TabsTrigger value="analytics" disabled>
+            Analytics
+          </TabsTrigger>
+          <TabsTrigger value="reports" disabled>
+            Reports
+          </TabsTrigger>
         </TabsList>
-
         <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Total Streak
+                  Consistency Score
                 </CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <Zap className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">34 days</div>
-                <p className="text-xs text-muted-foreground">
-                  +2 from last week
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Habits Completed
-                </CardTitle>
-                <CheckCircle className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">89%</div>
-                <p className="text-xs text-muted-foreground">
-                  +4% from last week
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Goals Progress
-                </CardTitle>
-                <Target className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">75%</div>
+                <AnimatedNumber
+                  value={85}
+                  className="text-2xl font-bold"
+                  suffix="%"
+                />
                 <p className="text-xs text-muted-foreground">
                   +12% from last month
                 </p>
@@ -70,89 +61,64 @@ export default function DashboardPage() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Focus Time
+                  Active Streaks
                 </CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
+                <CalendarDays className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">5.2 hours</div>
+                <AnimatedNumber value={21} className="text-2xl font-bold" />
                 <p className="text-xs text-muted-foreground">
-                  +0.8 hours from yesterday
+                  5 new records this week
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Goals Achieved
+                </CardTitle>
+                <Trophy className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <AnimatedNumber
+                  value={95}
+                  className="text-2xl font-bold"
+                  suffix="%"
+                />
+                <p className="text-xs text-muted-foreground">
+                  +15% completion rate
                 </p>
               </CardContent>
             </Card>
           </div>
-
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <Card className="col-span-4">
+              <CardHeader>
+                <CardTitle>Weekly Performance Trend</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <PerformanceChart />
+              </CardContent>
+            </Card>
+            <Card className="col-span-3">
+              <CardHeader>
+                <CardTitle>Goal Progress</CardTitle>
+                <CardDescription>Your top goals for this month</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <GoalProgress />
+              </CardContent>
+            </Card>
+          </div>
           <Card>
             <CardHeader>
-              <CardTitle>Weekly Overview</CardTitle>
+              <CardTitle>Recent Activity</CardTitle>
               <CardDescription>
-                Your progress for the last 7 days
+                Your latest actions and achievements
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Add a chart or detailed stats here */}
-              <p>Detailed weekly stats will be displayed here.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="habits" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Habits</CardTitle>
-              <CardDescription>Track your daily habits</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-4">
-                {[
-                  { name: "Morning Meditation", progress: 90 },
-                  { name: "Read for 30 minutes", progress: 75 },
-                  { name: "Exercise", progress: 60 },
-                  { name: "Write in journal", progress: 85 },
-                ].map((habit, index) => (
-                  <li key={index} className="flex items-center space-x-4">
-                    <CheckCircle className="h-5 w-5 text-primary" />
-                    <div className="flex-1">
-                      <p className="font-medium">{habit.name}</p>
-                      <Progress value={habit.progress} className="mt-2" />
-                    </div>
-                    <span className="text-sm text-muted-foreground">
-                      {habit.progress}%
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="goals" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Goals</CardTitle>
-              <CardDescription>Track your long-term goals</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-4">
-                {[
-                  { name: "Learn a new language", progress: 45 },
-                  { name: "Run a marathon", progress: 70 },
-                  { name: "Write a book", progress: 30 },
-                  { name: "Start a business", progress: 20 },
-                ].map((goal, index) => (
-                  <li key={index} className="flex items-center space-x-4">
-                    <Target className="h-5 w-5 text-primary" />
-                    <div className="flex-1">
-                      <p className="font-medium">{goal.name}</p>
-                      <Progress value={goal.progress} className="mt-2" />
-                    </div>
-                    <span className="text-sm text-muted-foreground">
-                      {goal.progress}%
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              <RecentActivity />
             </CardContent>
           </Card>
         </TabsContent>
