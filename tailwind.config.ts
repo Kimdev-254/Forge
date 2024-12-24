@@ -16,6 +16,17 @@ module.exports = {
       },
     },
     extend: {
+      screens: {
+        ml: "1024px",
+        lg: "1280px",
+        xl: "1440px",
+        "2xl": "1536px",
+        xxl: "1600px",
+
+        // Tailwind's default breakpoints:
+        sm: "640px",
+        md: "768px",
+      },
       fontFamily: {
         sans: ["var(--font-sans)"],
       },
