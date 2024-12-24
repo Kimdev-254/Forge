@@ -3,6 +3,8 @@ import { AnimatedNumber } from "@/components/animated-number"
 import { PerformanceChart } from "@/components/performance-chart"
 import { GoalProgress } from "@/components/goal-progress"
 import { RecentActivity } from "@/components/recent-activity"
+import { QuoteGenerator } from "@/components/quote-generator"
+import { HabitTracker } from "@/components/habit-tracker"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -109,6 +111,10 @@ export default function DashboardPage() {
                 <GoalProgress />
               </CardContent>
             </Card>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <QuoteGenerator />
+            <HabitTracker />
           </div>
           <Card>
             <CardHeader>
