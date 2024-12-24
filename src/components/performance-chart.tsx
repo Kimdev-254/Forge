@@ -1,5 +1,6 @@
 "use client"
 
+import { TooltipProps } from "recharts"
 import {
   Line,
   LineChart,
@@ -9,7 +10,12 @@ import {
   YAxis,
 } from "recharts"
 
-const data = [
+interface DataPoint {
+  day: string
+  score: number
+}
+
+const data: DataPoint[] = [
   { day: "Mon", score: 85 },
   { day: "Tue", score: 82 },
   { day: "Wed", score: 90 },
@@ -35,15 +41,28 @@ export function PerformanceChart() {
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => `${value}%`}
+          tickFormatter={(value: number) => `${value}%`}
         />
-        <Tooltip />
+        <Tooltip
+          contentStyle={{
+            backgroundColor: "hsl(var(--background))",
+            border: "1px solid hsl(var(--border))",
+          }}
+          labelStyle={{
+            color: "hsl(var(--foreground))",
+          }}
+        />
         <Line
           type="monotone"
           dataKey="score"
-          stroke="#8884d8"
-          strokeWidth={3}
-          dot={{ strokeWidth: 2, r: 4 }}
+          stroke="hsl(var(--primary))"
+          strokeWidth={2}
+          dot={{
+            strokeWidth: 2,
+            r: 4,
+            fill: "hsl(var(--background))",
+            stroke: "hsl(var(--primary))",
+          }}
         />
       </LineChart>
     </ResponsiveContainer>
