@@ -1,5 +1,5 @@
 {
-  "name": "forge",
+  "name": "forge-landing",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,36 +9,26 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@radix-ui/react-avatar": "^1.1.1",
-    "@radix-ui/react-label": "^2.1.0",
-    "@radix-ui/react-progress": "^1.1.0",
-    "@radix-ui/react-scroll-area": "^1.2.2",
-    "@radix-ui/react-slot": "^1.1.0",
-    "@radix-ui/react-switch": "^1.1.1",
-    "@radix-ui/react-tabs": "^1.1.1",
-    "@shadcn/ui": "^0.0.4",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "d3": "^7.9.0",
-    "framer-motion": "^11.15.0",
-    "lucide-react": "^0.464.0",
-    "next": "15.0.3",
+    "@radix-ui/react-scroll-area": "^1.0.5",
+    "@types/node": "20.2.5",
+    "@types/react": "18.2.7",
+    "@types/react-dom": "18.2.4",
+    "autoprefixer": "10.4.14",
+    "class-variance-authority": "^0.6.0",
+    "clsx": "^1.2.1",
+    "eslint": "8.41.0",
+    "eslint-config-next": "13.4.4",
+    "framer-motion": "^10.12.16",
+    "lucide-react": "^0.221.0",
+    "next": "^15.1.2",
     "next-themes": "^0.2.1",
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
-    "tailwind-merge": "^2.5.5",
-    "tailwindcss-animate": "^1.0.7"
-  },
-  "devDependencies": {
-    "@types/d3": "^7.4.3",
-    "@types/node": "^20",
-    "@types/prop-types": "^15.7.13",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "eslint": "^8",
-    "eslint-config-next": "15.0.3",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "postcss": "^8.4.49",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "recharts": "^2.10.3",
+    "tailwind-merge": "^1.12.0",
+    "tailwindcss": "3.3.2",
+    "tailwindcss-animate": "^1.0.5",
+    "typescript": "5.0.4"
   }
 }
