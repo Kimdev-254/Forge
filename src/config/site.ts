@@ -1,6 +1,16 @@
-export type SiteConfig = typeof siteConfig
+import { NavItem } from "@/types/nav"
 
-export const siteConfig = {
+interface SiteConfig {
+  name: string
+  description: string
+  mainNav: NavItem[]
+  links: {
+    twitter: string
+    github: string
+  }
+}
+
+export const siteConfig: SiteConfig = {
   name: "Forge",
   description:
     "Transform your habits, build consistency, and achieve your goals with our powerful discipline-building platform.",
