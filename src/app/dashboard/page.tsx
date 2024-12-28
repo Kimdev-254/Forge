@@ -70,7 +70,7 @@ export default function DashboardPage() {
               <CardContent>
                 <AnimatedNumber value={21} className="text-2xl font-bold" />
                 <p className="text-xs text-muted-foreground">
-                  5 new records this week
+                  10 new records this week
                 </p>
               </CardContent>
             </Card>
