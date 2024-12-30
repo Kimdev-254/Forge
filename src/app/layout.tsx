@@ -1,5 +1,6 @@
 import "./globals.css"
 import { Metadata } from "next"
+import { Suspense } from "react"
 
 import { siteConfig } from "@/config/site"
 import { fontSans } from "@/lib/fonts"
@@ -8,6 +9,7 @@ import { SiteHeader } from "@/components/site-header"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Sidebar } from "@/components/sidebar"
+import Loading from "./loading"
 
 export const metadata: Metadata = {
   title: {
@@ -42,9 +44,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="relative flex min-h-screen flex-col">
             <SiteHeader />
-            <div className="flex flex-1">
-              <Sidebar className="hidden md:block" />
-              <main className="flex-1 overflow-y-auto">{children}</main>
+            <div className="flex flex-1 md:grid md:grid-cols-[200px_1fr]">
+              <Sidebar className="hidden md:block w-[200px]" />
+              <main className="flex-1 overflow-y-auto">
+                <Suspense fallback={<Loading />}>{children}</Suspense>
+              </main>
             </div>
           </div>
           <TailwindIndicator />
